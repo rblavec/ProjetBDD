@@ -1,0 +1,507 @@
+
+
+ALTER TABLE jo.ActiviteMetier
+DROP CONSTRAINT FK_ASS_23
+GO
+
+ALTER TABLE jo.HistoriqueTache
+DROP CONSTRAINT HistoriqueTache_Activite_FK
+GO
+
+ALTER TABLE jo.Salarie
+DROP CONSTRAINT Salarie_Equipe_FK
+GO
+
+ALTER TABLE jo.Equipe
+DROP CONSTRAINT Equipe_Filiere_FK
+GO
+
+ALTER TABLE jo.Logiciel
+DROP CONSTRAINT Logiciel_Filiere_FK
+GO
+
+ALTER TABLE jo.Module
+DROP CONSTRAINT Module_Logiciel_FK
+GO
+
+ALTER TABLE jo.Version
+DROP CONSTRAINT Version_Logiciel_FK
+GO
+
+ALTER TABLE jo.ActiviteMetier
+DROP CONSTRAINT FK_ASS_22
+GO
+
+ALTER TABLE jo.Salarie
+DROP CONSTRAINT Salarie_Metier_FK
+GO
+
+ALTER TABLE jo.HistoriqueTache
+DROP CONSTRAINT HistoriqueTache_Module_FK
+GO
+
+ALTER TABLE jo.Module
+DROP CONSTRAINT Module_Module_FK
+GO
+
+ALTER TABLE jo.HistoriqueTache
+DROP CONSTRAINT HistoriqueTache_Salarie_FK
+GO
+
+ALTER TABLE jo.Salarie
+DROP CONSTRAINT Salarie_Salarie_FK
+GO
+
+ALTER TABLE jo.Equipe
+DROP CONSTRAINT Equipe_Service_FK
+GO
+
+ALTER TABLE jo.HistoriqueTache
+DROP CONSTRAINT HistoriqueTache_Tache_FK
+GO
+
+ALTER TABLE jo.TacheAnnexe
+DROP CONSTRAINT TacheAnnexe_Tache_FK
+GO
+
+ALTER TABLE jo.TacheProduction
+DROP CONSTRAINT TacheProduction_Tache_FK
+GO
+
+ALTER TABLE jo.HistoriqueTache
+DROP CONSTRAINT HistoriqueTache_Version_FK
+GO
+
+ALTER TABLE jo.RELEASE
+DROP CONSTRAINT Release_Version_FK
+GO
+
+
+
+
+DROP TABLE jo.Activite
+GO
+
+DROP TABLE jo.ActiviteMetier
+GO
+
+DROP TABLE jo.Equipe
+GO
+
+DROP TABLE jo.Filiere
+GO
+
+DROP TABLE jo.HistoriqueTache
+GO
+DROP TABLE jo.Logiciel
+GO
+
+DROP TABLE jo.Metier
+GO
+DROP TABLE jo.Module
+GO
+
+DROP TABLE jo.RELEASE
+GO
+
+DROP TABLE jo.Salarie
+GO
+
+DROP TABLE jo.Service
+GO
+
+DROP TABLE jo.Tache
+GO
+
+DROP TABLE jo.TacheAnnexe
+GO
+
+DROP TABLE jo.TacheProduction
+GO
+
+DROP TABLE jo.Version
+GO
+
+
+
+
+CREATE TABLE jo.Activite
+  (
+    IdAcitvite INTEGER NOT NULL ,
+    NomActivite NVARCHAR (30) NOT NULL
+  )
+GO
+ALTER TABLE jo.Activite ADD CONSTRAINT Activite_PK PRIMARY KEY CLUSTERED (
+IdAcitvite)
+GO
+
+CREATE TABLE jo.ActiviteMetier
+  (
+    Metier_IdMetier     INTEGER NOT NULL ,
+    Activite_IdAcitvite INTEGER NOT NULL
+  )
+GO
+ALTER TABLE jo.ActiviteMetier ADD CONSTRAINT ActiviteMetier_PK PRIMARY KEY
+CLUSTERED (Metier_IdMetier, Activite_IdAcitvite)
+GO
+
+CREATE TABLE jo.Equipe
+  (
+    IdEquipe          INTEGER NOT NULL ,
+    Filiere_IdFiliere INTEGER NOT NULL ,
+    Service_IdService INTEGER NOT NULL ,
+    NomEquipe NVARCHAR (30)
+  )
+GO
+ALTER TABLE jo.Equipe ADD CONSTRAINT Equipe_PK PRIMARY KEY CLUSTERED (IdEquipe)
+GO
+
+CREATE TABLE jo.Filiere
+  (
+    IdFiliere INTEGER NOT NULL ,
+    NomFiliere NVARCHAR (30) NOT NULL
+  )
+GO
+ALTER TABLE jo.Filiere ADD CONSTRAINT Filiere_PK PRIMARY KEY CLUSTERED (
+IdFiliere)
+GO
+
+CREATE TABLE jo.HistoriqueTache
+  (
+    IdHistTache      INTEGER NOT NULL ,
+    DateDuJour       DATE NOT NULL ,
+    NbrHeuresParJour DATETIME NOT NULL ,
+    TauxProductivite REAL NOT NULL ,
+    Salarie_Login NVARCHAR (10) NOT NULL ,
+    Tache_NumeroTache   INTEGER NOT NULL ,
+    Activite_IdAcitvite INTEGER NOT NULL ,
+    Module_CodeModule   INTEGER NOT NULL ,
+    Version_Numero NVARCHAR (10) NOT NULL
+  )
+GO
+ALTER TABLE jo.HistoriqueTache ADD CONSTRAINT HistoriqueTache_PK PRIMARY KEY
+CLUSTERED (IdHistTache)
+GO
+
+CREATE TABLE jo.Logiciel
+  (
+    Code              INTEGER NOT NULL ,
+    Filiere_IdFiliere INTEGER NOT NULL
+  )
+GO
+ALTER TABLE jo.Logiciel ADD CONSTRAINT Logiciel_PK PRIMARY KEY CLUSTERED (Code)
+GO
+
+CREATE TABLE jo.Metier
+  (
+    IdMetier INTEGER NOT NULL ,
+    NomMetier NVARCHAR (30) NOT NULL
+  )
+GO
+ALTER TABLE jo.Metier ADD CONSTRAINT Metier_PK PRIMARY KEY CLUSTERED (IdMetier)
+GO
+
+CREATE TABLE jo.Module
+  (
+    CodeModule INTEGER NOT NULL ,
+    Libelle NVARCHAR (100) NOT NULL ,
+    Logiciel_Code         INTEGER NOT NULL ,
+    SousModule_CodeModule INTEGER NOT NULL
+  )
+GO
+ALTER TABLE jo.Module ADD CONSTRAINT Module_PK PRIMARY KEY CLUSTERED (
+CodeModule)
+GO
+
+CREATE TABLE jo.Release
+  (
+    IdRelease    SMALLINT NOT NULL IDENTITY NOT FOR REPLICATION ,
+    DateCreation DATE NOT NULL ,
+    Version_Numero NVARCHAR (10) NOT NULL
+  )
+GO
+ALTER TABLE jo.Release
+ADD
+CHECK ( IdRelease BETWEEN 1 AND 999 )
+GO
+ALTER TABLE jo.Release ADD CONSTRAINT Release_PK PRIMARY KEY CLUSTERED (
+IdRelease)
+GO
+
+CREATE TABLE jo.Salarie
+  (
+    Login NVARCHAR (10) NOT NULL ,
+    Equipe_IdEquipe INTEGER NOT NULL ,
+    Manager_Login NVARCHAR (10) NOT NULL ,
+    Metier_IdMetier INTEGER NOT NULL ,
+    NomSalarie NVARCHAR (30) ,
+    PrenomSalarie NVARCHAR (30)
+  )
+GO
+ALTER TABLE jo.Salarie ADD CONSTRAINT Salarie_PK PRIMARY KEY CLUSTERED (Login)
+GO
+
+CREATE TABLE jo.Service
+  (
+    IdService INTEGER NOT NULL ,
+    NomService NVARCHAR (30) NOT NULL
+  )
+GO
+ALTER TABLE jo.Service ADD CONSTRAINT Service_PK PRIMARY KEY CLUSTERED (
+IdService)
+GO
+
+CREATE TABLE jo.Tache
+  (
+    NumeroTache INTEGER NOT NULL IDENTITY NOT FOR REPLICATION ,
+    Libelle NVARCHAR (30) NOT NULL ,
+    Description NVARCHAR (100) ,
+    DureeEstimee DATETIME NOT NULL
+  )
+GO
+ALTER TABLE jo.Tache ADD CONSTRAINT Tache_PK PRIMARY KEY CLUSTERED (NumeroTache
+)
+GO
+
+CREATE TABLE jo.TacheAnnexe
+  (
+    NumeroTache INTEGER NOT NULL ,
+    LibelleTacheAnnexe NVARCHAR (100) NOT NULL
+  )
+GO
+ALTER TABLE jo.TacheAnnexe ADD CONSTRAINT TacheAnnexe_PK PRIMARY KEY CLUSTERED
+(NumeroTache)
+GO
+
+CREATE TABLE jo.TacheProduction
+  (
+    NumeroTache         INTEGER NOT NULL ,
+    DureeInitialePrevue DATETIME NOT NULL
+  )
+GO
+ALTER TABLE jo.TacheProduction ADD CONSTRAINT TacheProduction_PK PRIMARY KEY
+CLUSTERED (NumeroTache)
+GO
+
+CREATE TABLE jo.Version
+  (
+    Numero NVARCHAR (10) NOT NULL ,
+    Millesime        SMALLINT NOT NULL ,
+    DateOuverture    DATE NOT NULL ,
+    DateSortiePrevue DATE NOT NULL ,
+    DateSortieReelle DATE ,
+    Logiciel_Code    INTEGER NOT NULL
+  )
+GO
+ALTER TABLE jo.Version ADD CONSTRAINT Version_PK PRIMARY KEY CLUSTERED (Numero)
+GO
+
+ALTER TABLE jo.Equipe
+ADD CONSTRAINT Equipe_Filiere_FK FOREIGN KEY
+(
+Filiere_IdFiliere
+)
+REFERENCES jo.Filiere
+(
+IdFiliere
+)
+GO
+
+ALTER TABLE jo.Equipe
+ADD CONSTRAINT Equipe_Service_FK FOREIGN KEY
+(
+Service_IdService
+)
+REFERENCES jo.Service
+(
+IdService
+)
+GO
+
+ALTER TABLE jo.ActiviteMetier
+ADD CONSTRAINT FK_ASS_22 FOREIGN KEY
+(
+Metier_IdMetier
+)
+REFERENCES jo.Metier
+(
+IdMetier
+)
+GO
+
+ALTER TABLE jo.ActiviteMetier
+ADD CONSTRAINT FK_ASS_23 FOREIGN KEY
+(
+Activite_IdAcitvite
+)
+REFERENCES jo.Activite
+(
+IdAcitvite
+)
+GO
+
+ALTER TABLE jo.HistoriqueTache
+ADD CONSTRAINT HistoriqueTache_Activite_FK FOREIGN KEY
+(
+Activite_IdAcitvite
+)
+REFERENCES jo.Activite
+(
+IdAcitvite
+)
+GO
+
+ALTER TABLE jo.HistoriqueTache
+ADD CONSTRAINT HistoriqueTache_Module_FK FOREIGN KEY
+(
+Module_CodeModule
+)
+REFERENCES jo.Module
+(
+CodeModule
+)
+GO
+
+ALTER TABLE jo.HistoriqueTache
+ADD CONSTRAINT HistoriqueTache_Salarie_FK FOREIGN KEY
+(
+Salarie_Login
+)
+REFERENCES jo.Salarie
+(
+Login
+)
+GO
+
+ALTER TABLE jo.HistoriqueTache
+ADD CONSTRAINT HistoriqueTache_Tache_FK FOREIGN KEY
+(
+Tache_NumeroTache
+)
+REFERENCES jo.Tache
+(
+NumeroTache
+)
+GO
+
+ALTER TABLE jo.HistoriqueTache
+ADD CONSTRAINT HistoriqueTache_Version_FK FOREIGN KEY
+(
+Version_Numero
+)
+REFERENCES jo.Version
+(
+Numero
+)
+GO
+
+ALTER TABLE jo.Logiciel
+ADD CONSTRAINT Logiciel_Filiere_FK FOREIGN KEY
+(
+Filiere_IdFiliere
+)
+REFERENCES jo.Filiere
+(
+IdFiliere
+)
+GO
+
+ALTER TABLE jo.Module
+ADD CONSTRAINT Module_Logiciel_FK FOREIGN KEY
+(
+Logiciel_Code
+)
+REFERENCES jo.Logiciel
+(
+Code
+)
+GO
+
+ALTER TABLE jo.Module
+ADD CONSTRAINT Module_Module_FK FOREIGN KEY
+(
+SousModule_CodeModule
+)
+REFERENCES jo.Module
+(
+CodeModule
+)
+GO
+
+ALTER TABLE jo.RELEASE
+ADD CONSTRAINT Release_Version_FK FOREIGN KEY
+(
+Version_Numero
+)
+REFERENCES jo.Version
+(
+Numero
+)
+GO
+
+ALTER TABLE jo.Salarie
+ADD CONSTRAINT Salarie_Equipe_FK FOREIGN KEY
+(
+Equipe_IdEquipe
+)
+REFERENCES jo.Equipe
+(
+IdEquipe
+)
+GO
+
+ALTER TABLE jo.Salarie
+ADD CONSTRAINT Salarie_Metier_FK FOREIGN KEY
+(
+Metier_IdMetier
+)
+REFERENCES jo.Metier
+(
+IdMetier
+)
+GO
+
+ALTER TABLE jo.Salarie
+ADD CONSTRAINT Salarie_Salarie_FK FOREIGN KEY
+(
+Manager_Login
+)
+REFERENCES jo.Salarie
+(
+Login
+)
+GO
+
+ALTER TABLE jo.TacheAnnexe
+ADD CONSTRAINT TacheAnnexe_Tache_FK FOREIGN KEY
+(
+NumeroTache
+)
+REFERENCES jo.Tache
+(
+NumeroTache
+)
+GO
+
+ALTER TABLE jo.TacheProduction
+ADD CONSTRAINT TacheProduction_Tache_FK FOREIGN KEY
+(
+NumeroTache
+)
+REFERENCES jo.Tache
+(
+NumeroTache
+)
+GO
+
+ALTER TABLE jo.Version
+ADD CONSTRAINT Version_Logiciel_FK FOREIGN KEY
+(
+Logiciel_Code
+)
+REFERENCES jo.Logiciel
+(
+Code
+)
+GO
+
