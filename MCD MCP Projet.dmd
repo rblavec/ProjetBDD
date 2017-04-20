@@ -1,8 +1,0 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
-<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="MCD MCP Projet" id="37EA7F75-5163-DD6C-9473-8EC743B8B0E2" version="3.5">
-<createdBy>rblavec</createdBy>
-<createdTime>2017-04-20 07:01:37 UTC</createdTime>
-<ownerDesignName>MCD MCP Projet</ownerDesignName>
-<capitalNames>false</capitalNames>
-<designId>37EA7F75-5163-DD6C-9473-8EC743B8B0E2</designId>
-</OSDM_Design>
